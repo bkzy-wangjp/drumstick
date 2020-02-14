@@ -26,6 +26,7 @@ type Task struct {
 	startTime    time.Time     //本次启动程序后任务首次调度的起始时间
 	period       time.Duration //执行周期
 	count        int64         //程序启动后的执行次数计数
+	Runing       bool          //是否在运行
 }
 
 /*
@@ -77,6 +78,7 @@ func (t *Task) Start() {
 	t.startTime, _ = prevTime(t.setStartTime, t.period)
 	newTimeValue := t.startTime.Add(t.period).Sub(time.Now())
 	t.count = 1
+	t.Runing = true
 	go func() {
 		for {
 			select {
@@ -100,6 +102,7 @@ func (t *Task) Start() {
 	task.Stop()
 */
 func (t *Task) Stop() {
+	t.Runing = false
 	t.Quit <- struct{}{}
 }
 
